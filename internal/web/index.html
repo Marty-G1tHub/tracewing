@@ -1,0 +1,162 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark"><title>迹翼 Tracewing</title><link rel="stylesheet" href="/static/app.css"></head>
+<body><div class="shell">
+
+<aside class="side">
+  <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d86ff"/><stop offset="1" stop-color="#3b4fe0"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#lg)"/><path d="M8.5 21.2a8.6 8.6 0 1 1 15 0" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="2.4" stroke-linecap="round"/><path d="M16 17.6l4.4-5.2" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg><b>迹翼</b><small id="ver"></small></div>
+  <nav class="nav" id="nav">
+    <button class="nv on" data-k="broadband"><svg viewBox="0 0 24 24"><path d="M4.5 17.5a8.5 8.5 0 1 1 15 0"/><path d="M12 13.5l3.6-4.3"/></svg>宽带测速<i class="live-dot"></i></button>
+    <button class="nv" data-k="testip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg>测试IP<i class="live-dot"></i></button>
+    <button class="nv" data-k="vps"><svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="6.5" rx="2"/><rect x="3.5" y="13.5" width="17" height="6.5" rx="2"/><path d="M7.5 7.25h.01M7.5 16.75h.01"/></svg>VPS测速<i class="live-dot"></i></button>
+    <button class="nv" data-k="route"><svg viewBox="0 0 24 24"><circle cx="5.5" cy="6.5" r="2"/><circle cx="18.5" cy="17.5" r="2"/><path d="M7.5 6.5h6a3.5 3.5 0 0 1 0 7h-3a3.5 3.5 0 0 0 0 7"/></svg>线路检测<i class="live-dot"></i></button>
+    <div class="nv-sep"></div>
+    <button class="nv" data-k="history"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>历史记录</button>
+  </nav>
+  <div class="side-foot">
+    <button class="netpill" id="netbtn" title="网络环境与代理设置"><i class="dot"></i><span><b id="net-a">检查网络…</b><em id="net-b">网络环境</em></span><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="linkbtn" id="quit" title="退出程序">退出程序</button>
+  </div>
+</aside>
+
+<main class="main" id="main"><div class="col">
+  <div id="banner" class="alert info hide"><span id="banner-t"></span><button class="x" id="banner-x" aria-label="关闭">×</button></div>
+  <div id="err" class="alert bad hide"><span id="err-t"></span><button class="x" id="err-x" aria-label="关闭">×</button></div>
+
+  <!-- 进行中：全局只有一个任务，实时视图覆盖当前页的设置区 -->
+  <section id="live" class="card live hide" aria-live="polite">
+    <div class="live-top"><span class="eyebrow" id="live-t">进行中</span><span class="meta" id="live-el"></span></div>
+    <div class="gauge-wrap">
+      <svg class="gauge" viewBox="0 0 240 200" aria-hidden="true">
+        <defs><linearGradient id="gg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="var(--accent-2)"/><stop offset="1" stop-color="var(--accent)"/></linearGradient></defs>
+        <path class="g-track" id="g-track" pathLength="100" d=""/><path class="g-val" id="g-val" pathLength="100" d=""/>
+      </svg>
+      <div class="g-center"><div class="num" id="g-num">—</div><div class="unit" id="g-unit">Mbps</div></div>
+      <span class="g-min">0</span><span class="g-max" id="g-max"></span>
+    </div>
+    <svg class="lspark" id="lspark" preserveAspectRatio="none"></svg>
+    <div class="phase" id="live-s"></div>
+    <div class="pbar"><i id="live-b"></i></div>
+    <div class="live-foot"><button class="btn ghost danger" id="cancel">取消测速</button></div>
+  </section>
+
+  <!-- 宽带测速 -->
+  <section class="page" id="p-broadband">
+    <header class="ph"><h1>宽带测速</h1><p>你的宽带实际能跑多快？多条并行连接测下行与上行，取稳定窗口的中位数。</p></header>
+    <div class="setup">
+      <div class="card hero" id="hero-broadband">
+        <div class="ghost-gauge" aria-hidden="true"><svg viewBox="0 0 240 200"><path class="g-track" id="gg-track" pathLength="100" d=""/></svg><div class="g-center"><div class="num dim">—</div><div class="unit">Mbps</div></div></div>
+        <div class="hero-body">
+          <div class="field"><span class="lab">档位</span><div class="seg"><label><input type="radio" name="bbp" value="quick"><span>快速<small>约 30 秒</small></span></label><label><input type="radio" name="bbp" value="standard" checked><span>标准<small>3 轮取中位</small></span></label></div></div>
+          <div class="field"><span class="lab">区域</span><div class="tchips"><label class="tchip"><input type="checkbox" id="bb-cn" checked><span>国内</span></label><label class="tchip"><input type="checkbox" id="bb-gl" checked><span>境外</span></label></div></div>
+          <div class="cta-row"><button class="cta run" data-k="broadband"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>开始测速</button><button class="linkbtn" data-adv="adv-broadband">填写套餐速率，判断是否跑满 →</button><button class="linkbtn only-res" data-toggle-setup type="button">调整设置</button></div>
+        </div>
+      </div>
+      <details class="adv" id="adv-broadband"><summary><span>高级</span><em>方向 · 并发流 · 套餐速率</em></summary>
+        <div class="adv-body">
+          <div class="field"><span class="lab">方向</span><div class="tchips"><label class="tchip"><input type="checkbox" id="bb-dn" checked><span>下行</span></label><label class="tchip"><input type="checkbox" id="bb-up" checked><span>上行</span></label></div></div>
+          <div class="field"><label class="lab" for="bb-st">并发流</label><select id="bb-st"><option>1</option><option>2</option><option selected>4</option><option>8</option><option>16</option></select></div>
+          <div class="field"><label class="lab" for="bb-pd">套餐下行 Mbps</label><input type="number" id="bb-pd" min="1" placeholder="如 1000"></div>
+          <div class="field"><label class="lab" for="bb-pu">套餐上行 Mbps</label><input type="number" id="bb-pu" min="1" placeholder="如 100"></div>
+          <p class="hint wide">套餐速率选填，仅用来算“套餐利用率”并给出 健康 / 一般 / 异常。多条并行 TCP 连接，剔除预热后取稳定窗口；上行用随机数据，不设上限。</p>
+        </div>
+      </details>
+    </div>
+    <div class="result" id="res-broadband"></div>
+  </section>
+
+  <!-- 测试IP -->
+  <section class="page hide" id="p-testip">
+    <header class="ph"><h1>测试 IP</h1><p>这些 IP 通不通、延迟多少、稳不稳？测延迟、丢包与抖动，并可追踪去程。</p></header>
+    <div class="setup">
+      <div class="card hero col1" id="hero-testip">
+        <div class="hero-body">
+          <div class="field"><label class="lab" for="ip-t">目标 IP <span class="faint">每行一个，或用逗号 / 空格分隔，最多 50 个公网 IPv4</span></label><textarea id="ip-t" rows="4" placeholder="8.8.8.8&#10;1.1.1.1"></textarea></div>
+          <div class="field"><span class="lab">方式</span><div class="seg"><label><input type="radio" name="ipm" value="icmp" checked><span>ICMP ping</span></label><label><input type="radio" name="ipm" value="tcp"><span>TCP 握手</span></label></div></div>
+          <div class="cta-row"><button class="cta run" data-k="testip"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>开始测试</button><button class="linkbtn only-res" data-toggle-setup type="button">调整设置</button></div>
+        </div>
+      </div>
+      <details class="adv" id="adv-testip"><summary><span>高级</span><em>次数 · 端口 · 去程 · 归属查询</em></summary>
+        <div class="adv-body">
+          <div class="field"><label class="lab" for="ip-n">每个地址的次数</label><input type="number" id="ip-n" value="50" min="3" max="500"></div>
+          <div class="field hide" id="ip-portf"><label class="lab" for="ip-port">TCP 端口</label><input type="number" id="ip-port" value="443" min="1" max="65535"></div>
+          <div class="field"><span class="lab">附加</span><div class="tchips"><label class="tchip"><input type="checkbox" id="ip-tr" checked><span>去程</span></label><label class="tchip"><input type="checkbox" id="ip-lk" checked><span>归属查询</span></label></div></div>
+          <p class="hint wide">“归属查询”会把这些 IP 发给公共服务（RIPEstat、ipinfo.io），不想外发可取消。有 TUN / Fake-IP 时去程不可信，结果里会标明。</p>
+        </div>
+      </details>
+    </div>
+    <div class="result" id="res-testip"></div>
+  </section>
+
+  <!-- VPS测速 -->
+  <section class="page hide" id="p-vps">
+    <header class="ph"><h1>VPS 测速</h1><p>你的 VPS 线路和机器本身怎么样？测四组吞吐、时延，并给出带证据的诊断。</p></header>
+    <div class="setup">
+      <div class="card hero col1" id="hero-vps">
+        <div class="hero-body">
+          <div class="field"><span class="lab">来源</span><div class="seg"><label><input type="radio" name="vs" value="server" checked><span>自带服务端</span></label><label><input type="radio" name="vs" value="url"><span>自备地址</span></label><label><input type="radio" name="vs" value="public"><span>公共端点<small>仅参考</small></span></label></div></div>
+          <div id="vs-server" class="fgrid">
+            <div class="field"><label class="lab" for="v-srv">服务器地址</label><input type="text" id="v-srv" placeholder="1.2.3.4 或 1.2.3.4:9527" autocomplete="off"></div>
+            <div class="field"><label class="lab" for="v-tok">令牌 <span class="faint">不会保存</span></label><input type="password" id="v-tok" autocomplete="off" placeholder="服务端启动时打印"></div>
+          </div>
+          <div id="vs-url" class="fgrid hide">
+            <div class="field"><label class="lab" for="v-du">下载地址 <span class="faint">大文件，支持 Range 最佳</span></label><input type="text" id="v-du" placeholder="https://你的服务器/big.bin"></div>
+            <div class="field"><label class="lab" for="v-uu">上传地址 <span class="faint">接受 POST，选填</span></label><input type="text" id="v-uu" placeholder="https://你的服务器/upload"></div>
+          </div>
+          <div id="vs-public" class="hide"><div class="fgrid"><div class="field"><label class="lab" for="v-reg">区域</label><select id="v-reg"><option value="global">境外</option><option value="cn">国内</option></select></div></div><div class="note warn">公共端点测的是“本机到公共测速源”，<b>不是你的 VPS</b>，只用来对照参考。</div></div>
+          <div class="field"><span class="lab">档位</span><div class="seg"><label><input type="radio" name="vp" value="quick"><span>快速</span></label><label><input type="radio" name="vp" value="standard" checked><span>标准<small>约 5 分钟</small></span></label></div></div>
+          <div class="cta-row"><button class="cta run" data-k="vps"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>开始测速</button><button class="linkbtn only-res" data-toggle-setup type="button">调整设置</button></div>
+        </div>
+      </div>
+      <details class="adv" id="adv-vps"><summary><span>高级</span><em>UDP 目标速率 · 本地上行上限</em></summary>
+        <div class="adv-body">
+          <div class="field"><label class="lab" for="v-udp">UDP 目标速率 Mbps <span class="faint">0 = 不测</span></label><input type="number" id="v-udp" value="0" min="0"></div>
+          <div class="field"><label class="lab" for="v-cap">本地上行上限 Mbps <span class="faint">选填，仅用于诊断，不限速</span></label><input type="number" id="v-cap" min="1" placeholder="留空 = 不判断"></div>
+          <p class="hint wide">四组吞吐：上行 / 下行 × 单流 / 4 流，加应用层 echo 时延与 TCP 握手；自带服务端还会回传 CPU / 内存。服务端部署：<span class="mono">./tracewing --server --port 9527</span>，令牌启动时会打印，详见 README。</p>
+        </div>
+      </details>
+    </div>
+    <div class="result" id="res-vps"></div>
+  </section>
+
+  <!-- 线路检测 -->
+  <section class="page hide" id="p-route">
+    <header class="ph"><h1>线路检测</h1><p>去程与回程走的是哪条线路？本机逐跳探测到你的服务器；服务器上的 agent 再逐跳探测回国内三网四地，并给出带证据的判定（CN2 GIA / GT、AS9929、CMIN2 等）。</p></header>
+    <div class="setup">
+      <div class="card hero col1" id="hero-route">
+        <div class="hero-body">
+          <div class="fgrid">
+            <div class="field"><label class="lab" for="r-srv">服务器地址</label><input type="text" id="r-srv" placeholder="1.2.3.4 或 1.2.3.4:9527" autocomplete="off"></div>
+            <div class="field"><label class="lab" for="r-tok">令牌 <span class="faint">不会保存；不填则只测去程</span></label><input type="password" id="r-tok" autocomplete="off" placeholder="install.sh 安装时打印的令牌"></div>
+          </div>
+          <div class="note info">回程需要在服务器上部署 agent（一条命令，见 README）；agent 只能探测固定的 12 个国内目标和你的出口 IP，不会执行任何命令。</div>
+          <div class="cta-row"><button class="cta run" data-k="route"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>开始检测</button><button class="linkbtn only-res" data-toggle-setup type="button">调整设置</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="result" id="res-route"></div>
+  </section>
+
+  <!-- 历史 -->
+  <section class="page hide" id="p-history">
+    <header class="ph"><h1>历史记录</h1><p>每次测速都会保存为一份离线报告，随时回看或对比。</p></header>
+    <div id="hist-list"></div>
+    <div id="hist-detail" class="hide"></div>
+    <p class="hint" id="datadir"></p>
+  </section>
+</div></main>
+
+<!-- 网络环境抽屉 -->
+<div id="drawer" class="drawer hide"><div class="scrim" id="scrim"></div>
+  <aside class="sheet" role="dialog" aria-label="网络环境">
+    <div class="sheet-h"><h2>网络环境</h2><button class="x" id="drawer-x" aria-label="关闭">×</button></div>
+    <p class="hint top">测速流量怎么走。本程序只读取、不修改系统代理 / 路由 / DNS。</p>
+    <div class="field"><span class="lab">网络路径</span><div class="seg stack"><label><input type="radio" name="pm" value="system" checked><span>跟随系统<small>走系统代理（如有）</small></span></label><label><input type="radio" name="pm" value="direct"><span>绕过系统代理<small>直连</small></span></label><label><input type="radio" name="pm" value="custom"><span>自定义代理<small>HTTP / SOCKS5</small></span></label></div></div>
+    <div class="field hide" id="customf"><label class="lab" for="pcustom">代理地址</label><input type="text" id="pcustom" placeholder="http://127.0.0.1:7890 或 socks5://127.0.0.1:1080"></div>
+    <div class="field"><label class="lab" for="pdns">DNS <span class="faint">可选，如路由器 IP</span></label><input type="text" id="pdns" placeholder="留空 = 系统 DNS"></div>
+    <div class="sheet-act"><button class="btn" id="recheck">重新检查环境</button></div>
+    <div id="envbox" class="envbox"></div>
+    <p class="hint">TUN 模式属于系统层捕获，“绕过系统代理”对它无效，环境检查会提示。</p>
+  </aside>
+</div>
+<div id="lost" class="lost hide"><div class="card"><h2>连接已断开</h2><p>迹翼程序已退出，或与它的连接中断了。请重新打开程序。</p></div></div>
+</div><script src="/static/render.js"></script><script src="/static/app.js"></script></body></html>

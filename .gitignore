@@ -1,0 +1,4 @@
+dist/
+releases/
+*.test
+*.exe

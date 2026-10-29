@@ -1,0 +1,18 @@
+{
+  "version": "2026-10-27",
+  "note": "各运营商在四地的公开 DNS 解析服务器，长期稳定、响应 ICMP；地理位置依据 RIPEstat 的持有者信息，可能随运营商调整而变化。",
+  "targets": [
+    {"id": "ct-bj", "carrier": "telecom", "city": "北京", "label": "北京电信", "ip": "219.141.136.10"},
+    {"id": "ct-sh", "carrier": "telecom", "city": "上海", "label": "上海电信", "ip": "202.96.209.5"},
+    {"id": "ct-gz", "carrier": "telecom", "city": "广州", "label": "广州电信", "ip": "202.96.128.86"},
+    {"id": "ct-cd", "carrier": "telecom", "city": "成都", "label": "成都电信", "ip": "61.139.2.69"},
+    {"id": "cu-bj", "carrier": "unicom", "city": "北京", "label": "北京联通", "ip": "202.106.0.20"},
+    {"id": "cu-sh", "carrier": "unicom", "city": "上海", "label": "上海联通", "ip": "210.22.70.3"},
+    {"id": "cu-gz", "carrier": "unicom", "city": "广州", "label": "广州联通", "ip": "210.21.196.6"},
+    {"id": "cu-cd", "carrier": "unicom", "city": "成都", "label": "成都联通", "ip": "119.6.6.6"},
+    {"id": "cm-bj", "carrier": "mobile", "city": "北京", "label": "北京移动", "ip": "211.136.17.107"},
+    {"id": "cm-sh", "carrier": "mobile", "city": "上海", "label": "上海移动", "ip": "211.136.150.66"},
+    {"id": "cm-gz", "carrier": "mobile", "city": "广州", "label": "广州移动", "ip": "211.136.192.6"},
+    {"id": "cm-cd", "carrier": "mobile", "city": "成都", "label": "成都移动", "ip": "211.137.96.205"}
+  ]
+}

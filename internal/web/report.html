@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
+<title>迹翼 Tracewing 报告</title><style>/*CSS*/</style></head><body class="report"><div class="rwrap">
+<header class="rhead"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d86ff"/><stop offset="1" stop-color="#3b4fe0"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#lg)"/><path d="M8.5 21.2a8.6 8.6 0 1 1 15 0" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="2.4" stroke-linecap="round"/><path d="M16 17.6l4.4-5.2" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+<div><h1 id="t">迹翼 Tracewing 报告</h1><div class="meta" id="sub"></div></div><button class="btn noprint" onclick="print()">打印 / 存为 PDF</button></header>
+<div class="result" id="o"></div><div class="rfoot">本报告为离线单文件，由本机迹翼 Tracewing 生成；不含服务器令牌。</div></div>
+<script>/*JS*/</script>
+<script>var KIND=/*KIND*/,DATA=/*DATA*/;document.getElementById('t').textContent=Render.title(KIND)+' 报告';document.getElementById('sub').textContent=new Date(DATA.meta.captured_at).toLocaleString('zh-CN',{hour12:false});document.title=Render.title(KIND)+' · '+DATA.meta.captured_at;document.getElementById('o').innerHTML=Render.page(KIND,DATA);
+window.addEventListener('beforeprint',function(){document.querySelectorAll('details').forEach(function(d){d.open=true})});</script></body></html>
